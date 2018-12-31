@@ -46,7 +46,7 @@ class AlfredSnippet
       alfredsnippet: {
         snippet: @snippet,
         uid: @uid,
-        name: "#{@snippet}: #{@name}",
+        name: "#{@snippet} - #{@name}",
         keyword: @keyword
       }
     }.to_json
