@@ -13,19 +13,20 @@ end
 
 def map_gemoji_to_alfredsnippets(gemoji)
   gemoji.flat_map do |g|
-    g["aliases"].map do |a| # e.g. "smiley"
+    g["aliases"].map do |a|
+      keyword = a.tr("_", " ") # e.g. "smiley"
+      keyword_with_colons = ":#{keyword}:" # e.g. ":smiley:"
       emoji = g["emoji"] # e.g. "😃"
-      keyword = ":#{a.tr('_', ' ')}:" # e.g. ":smiley:"
       tags = g["tags"].join(", ") # e.g. "happy, joy, haha"
-      name = "#{emoji} - #{keyword}" # e.g. "😃 - :smiley:"
-      name += " - #{tags}" if g["tags"].count.positive? # e.g. "😃 - :smiley: - happy, joy, haha"
+      name = "#{emoji} - #{keyword}" # e.g. "😃 - smiley"
+      name += ", #{tags}" if g["tags"].count.positive? # e.g. "😃 - smiley, happy, joy, haha"
 
       {
         alfredsnippet: {
           uid: name,
           snippet: emoji,
           name: name,
-          keyword: keyword
+          keyword: keyword_with_colons
         }
       }
     end
