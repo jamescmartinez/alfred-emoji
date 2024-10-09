@@ -52,9 +52,32 @@ def write_alfredsnippets_file(alfredsnippets)
   FileUtils.rm_rf("tmp")
 end
 
+def unzip_alfredsnippets(destination)
+  FileUtils.mkdir_p(destination)
+  Zip::File.open("Emoji.alfredsnippets") do |zip_file|
+    zip_file.each do |entry|
+      entry.extract(File.join(destination, entry.name)) { true }
+    end
+  end
+end
+
+def print_diff_between_old_and_new
+  puts `diff -bur old new`
+end
+
+def delete_old_and_new
+  FileUtils.rm_rf("old")
+  FileUtils.rm_rf("new")
+end
+
 #####
 
+unzip_alfredsnippets("old")
 gemoji = fetch_gemoji
 alfredsnippets = map_gemoji_to_alfredsnippets(gemoji)
 write_alfredsnippets_file(alfredsnippets)
+unzip_alfredsnippets("new")
+print_diff_between_old_and_new
+delete_old_and_new
+
 puts "Done! #{alfredsnippets.count} Alfred emoji snippets created."
